@@ -12,8 +12,8 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@Path("/products")
-public class ProductResource {
+@Path("v1/customers")
+public class CustomerResource {
 
     /*
     @Inject
