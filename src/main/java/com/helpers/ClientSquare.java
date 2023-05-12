@@ -1,6 +1,5 @@
 package com.helpers;
 
-
 import com.squareup.square.Environment;
 import com.squareup.square.SquareClient;
 import com.squareup.square.api.LocationsApi;
@@ -14,10 +13,10 @@ public class ClientSquare {
 
     static public SquareClient client;
 
-    public static void connection() {
+    public ClientSquare() {
         InputStream inputStream
                 = SquareClient.class.getResourceAsStream("/config.properties");
-        
+
         System.out.println(inputStream);
         Properties prop = new Properties();
         try {
@@ -26,13 +25,34 @@ public class ClientSquare {
             System.out.println("Error reading properties file");
             e.printStackTrace();
         }
-        
+
         ClientSquare.client = new SquareClient.Builder()
                 .accessToken(prop.getProperty("SQUARE_ACCESS_TOKEN"))
                 .environment(Environment.SANDBOX)
                 .build();
-       
-        /*
+
+    }
+    /*
+
+    public static void connection() {
+        InputStream inputStream
+                = SquareClient.class.getResourceAsStream("/config.properties");
+
+        System.out.println(inputStream);
+        Properties prop = new Properties();
+        try {
+            prop.load(inputStream);
+        } catch (IOException e) {
+            System.out.println("Error reading properties file");
+            e.printStackTrace();
+        }
+
+        ClientSquare.client = new SquareClient.Builder()
+                .accessToken(prop.getProperty("SQUARE_ACCESS_TOKEN"))
+                .environment(Environment.SANDBOX)
+                .build();
+
+        
 
         LocationsApi locationsApi = client.getLocationsApi();
 
@@ -64,8 +84,7 @@ public class ClientSquare {
                 .join();
         SquareClient.shutdown();
         
-*/
-    }
-
+         */
+   // }
 
 }

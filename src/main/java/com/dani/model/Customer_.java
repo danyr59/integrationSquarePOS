@@ -20,6 +20,7 @@ public class Customer_ {
     public String phoneNumber;
     public String referenceId;
     public String note;
+    //datos adicionales para operaciones internas
     public CreateCustomerRequest body;
     public CustomersApi customers_api;
 }

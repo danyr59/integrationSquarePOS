@@ -27,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public void create_connection() {
-        ClientSquare.connection();
+      //  ClientSquare.connection();
     }
 
     @Override

@@ -25,7 +25,7 @@ public class CustomerResource {
     @Produces("application/json")
     public Response getProducts() {
         customer_service_impl = new CustomerServiceImpl();
-        customer_service_impl.create_connection();
+        //customer_service_impl.create_connection();
         List<Customer> customers = customer_service_impl.list_of_customers();
         return Response.ok().status(Response.Status.OK).entity(customers).build();
     }
@@ -36,7 +36,7 @@ public class CustomerResource {
     public Response crear_customer(Customer_ c_) {
        
         customer_service_impl = new CustomerServiceImpl();
-        customer_service_impl.create_connection();
+        //customer_service_impl.create_connection();
 
 
         
