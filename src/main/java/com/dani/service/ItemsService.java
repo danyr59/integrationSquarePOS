@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ItemsService {
     public List<CatalogObject> getCatalog();
+    public void create_catalog();
 }

@@ -23,5 +23,14 @@ public class itemsResource {
         List<CatalogObject> catalogo =  a.getCatalog();
         return Response.ok().status(Response.Status.OK).entity(catalogo).build();
     }
+ 
+    @Path("/1")
+    @GET
+    @Produces
+    public Response createInventory(){
+        a.create_catalog();
+        return Response.ok().status(Response.Status.CREATED).entity("listo").build();
+    }
+
     
 }
