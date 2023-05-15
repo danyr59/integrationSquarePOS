@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderLineItem createOrderLineItem(String quantity, String itemVariationId) {
         OrderLineItem orderLineItem = new OrderLineItem.Builder(quantity)
                 .catalogObjectId(itemVariationId)
-                .modifiers(modifiers)
+              //  .modifiers(modifiers)
                 .build();
         return orderLineItem;
 
@@ -61,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
         //crear order
         Order order = new Order.Builder(locationId)
                 .lineItems(lineItems)
+                .locationId(locationId)
                 .build();
 
         return order;
@@ -68,20 +69,22 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     public void createOrderBuilder(String modifierId, String quantityModifier, String quantityOrder, String itemVariationId, String location){
-        if(!modifierId.isEmpty()){
+        /*
+        if(modifierId.isEmpty()){
             OrderLineItemModifier orderLineItemM =  this.createOrderLineModifier("", "");
             addOrderLineItemModifier(orderLineItemM);
         } else {
             OrderLineItemModifier orderLineItemM =  this.createOrderLineModifier(modifierId, quantityModifier);
             addOrderLineItemModifier(orderLineItemM);
         }
+        */
    
         
         
         OrderLineItem orderLineItem = createOrderLineItem(quantityOrder, itemVariationId );
         addLineItems(orderLineItem);
         this.order = createOrder(location);
-        System.out.println("exitoso");
+        //System.out.println(itemVariationId);
         
         
         
@@ -90,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     public void createOrderRequest() {
-
+        System.out.println(this.order);
         CreateOrderRequest body = new CreateOrderRequest.Builder()
                 .order(this.order)
                 .idempotencyKey(UUID.randomUUID().toString())
@@ -102,6 +105,8 @@ public class OrderServiceImpl implements OrderService {
                 .exceptionally(exception -> {
                     System.out.println("Failed to make the request");
                     System.out.println(String.format("Exception: %s", exception.getMessage()));
+                    System.out.println(String.format("Exception: %s", exception.getStackTrace()));
+                                        System.out.println(String.format("Exception: %s", exception.getCause()));
                     return null;
 
                 });
