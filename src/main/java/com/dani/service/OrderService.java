@@ -4,6 +4,7 @@ package com.dani.service;
 import com.squareup.square.models.Order;
 import com.squareup.square.models.OrderLineItem;
 import com.squareup.square.models.OrderLineItemModifier;
+import java.util.List;
 
 /**
  *
@@ -15,6 +16,6 @@ public interface OrderService {
     OrderLineItem createOrderLineItem(String quantity, String itemVariationId);
     void addLineItems(OrderLineItem item);
     Order createOrder(String locationId);
-    void createOrderRequest();
+    List<Order> createOrderRequest();
     void createOrderBuilder(String modifierId, String quantityModifier, String quantityOrder, String itemVariationId, String location);
 }

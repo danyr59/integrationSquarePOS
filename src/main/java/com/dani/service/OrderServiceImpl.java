@@ -6,7 +6,9 @@ import com.squareup.square.models.CreateOrderRequest;
 import com.squareup.square.models.Order;
 import com.squareup.square.models.OrderLineItem;
 import com.squareup.square.models.OrderLineItemModifier;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderLineItem createOrderLineItem(String quantity, String itemVariationId) {
         OrderLineItem orderLineItem = new OrderLineItem.Builder(quantity)
                 .catalogObjectId(itemVariationId)
-              //  .modifiers(modifiers)
+                //  .modifiers(modifiers)
                 .build();
         return orderLineItem;
 
@@ -53,8 +55,6 @@ public class OrderServiceImpl implements OrderService {
     public void addLineItems(OrderLineItem item) {
         lineItems.add(item);
     }
-    
-    
 
     @Override
     public Order createOrder(String locationId) {
@@ -66,10 +66,10 @@ public class OrderServiceImpl implements OrderService {
 
         return order;
     }
-    
+
     @Override
-    public void createOrderBuilder(String modifierId, String quantityModifier, String quantityOrder, String itemVariationId, String location){
-        /*
+    public void createOrderBuilder(String modifierId, String quantityModifier, String quantityOrder, String itemVariationId, String location) {
+        
         if(modifierId.isEmpty()){
             OrderLineItemModifier orderLineItemM =  this.createOrderLineModifier("", "");
             addOrderLineItemModifier(orderLineItemM);
@@ -77,23 +77,21 @@ public class OrderServiceImpl implements OrderService {
             OrderLineItemModifier orderLineItemM =  this.createOrderLineModifier(modifierId, quantityModifier);
             addOrderLineItemModifier(orderLineItemM);
         }
-        */
-   
         
-        
-        OrderLineItem orderLineItem = createOrderLineItem(quantityOrder, itemVariationId );
+
+        OrderLineItem orderLineItem = createOrderLineItem(quantityOrder, itemVariationId);
         addLineItems(orderLineItem);
         this.order = createOrder(location);
         //System.out.println(itemVariationId);
-        
-        
-        
+
     }
-    
-    
+
     @Override
-    public void createOrderRequest() {
+    public List<Order> createOrderRequest() {
         System.out.println(this.order);
+
+        List<Order> order = new ArrayList<>();
+        final Order orders;
         CreateOrderRequest body = new CreateOrderRequest.Builder()
                 .order(this.order)
                 .idempotencyKey(UUID.randomUUID().toString())
@@ -101,17 +99,20 @@ public class OrderServiceImpl implements OrderService {
         ordersApi.createOrderAsync(body)
                 .thenAccept(result -> {
                     System.out.println("Successs!");
+                    order.add(result.getOrder());
+
                 })
                 .exceptionally(exception -> {
                     System.out.println("Failed to make the request");
                     System.out.println(String.format("Exception: %s", exception.getMessage()));
                     System.out.println(String.format("Exception: %s", exception.getStackTrace()));
-                                        System.out.println(String.format("Exception: %s", exception.getCause()));
+                    System.out.println(String.format("Exception: %s", exception.getCause()));
                     return null;
 
-                });
-                
-        
+                }).join();
+
+        return order;
+
     }
 
 }
