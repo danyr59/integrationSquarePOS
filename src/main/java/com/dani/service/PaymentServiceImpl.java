@@ -14,6 +14,8 @@ import com.squareup.square.models.Payment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
 
 public class PaymentServiceImpl {
 
@@ -23,7 +25,7 @@ public class PaymentServiceImpl {
         paymentsApi = ClientSquare.client.getPaymentsApi();
     }
 
-    public Payment createPayment(Payment_ payment) {
+    public Payment createPayment(Payment_ payment) throws InterruptedException, ExecutionException{
         Money amountMoney = new Money.Builder()
                 .amount(payment.getAmount_money().getAmount())
                 .currency(payment.getAmount_money().getCurrency())
@@ -42,6 +44,7 @@ public class PaymentServiceImpl {
                 .build();
 
         List<Payment> pay = new ArrayList<>();
+        
         paymentsApi.createPaymentAsync(body)
                 .thenAccept(result -> {
                     pay.add(result.getPayment());

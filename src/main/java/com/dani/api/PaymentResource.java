@@ -11,6 +11,10 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.dani.service.PaymentServiceImpl;
+import com.squareup.square.exceptions.ApiException;
+
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 
 
 
@@ -28,7 +32,7 @@ public class PaymentResource {
     
     @POST
     @Consumes("application/json")
-    public Response create_payment(Payment_ request){
+    public Response create_payment(Payment_ request) throws InterruptedException, ExecutionException{
         System.out.println("En payment");
         Payment  paymentResponse = service.createPayment(request);
         //service.createPayment(request);
