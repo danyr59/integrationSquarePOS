@@ -23,7 +23,7 @@ public class CustomerResource {
 
     @GET
     @Produces("application/json")
-    public Response getProducts() {
+    public Response getCustomers() {
         customer_service_impl = new CustomerServiceImpl();
         //customer_service_impl.create_connection();
         List<Customer> customers = customer_service_impl.list_of_customers();

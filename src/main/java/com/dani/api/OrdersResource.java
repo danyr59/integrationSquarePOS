@@ -8,6 +8,8 @@ import com.dani.model.Orders_;
 import com.dani.service.OrderServiceImpl;
 import com.squareup.square.models.Order;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Path("v1/orders")
 public class OrdersResource {
@@ -38,10 +40,16 @@ public class OrdersResource {
                 order.getLocation());
         
         List<Order> orderResponse = orderService.createOrderRequest();
-        System.out.println(orderResponse);
+        System.out.println(orderResponse.get(0));
+        //JSONObject orderjson = new JSONObject(orderResponse.get(0));
+        //orderjson.put("line_items", orderResponse.get(0).getLineItems() );
+        //orderjson
+        //System.out.println(orderjson.toString());
         
         
-        return Response.ok().status(Response.Status.CREATED).entity(orderResponse).build();
+        
+        
+        return Response.ok().status(Response.Status.CREATED).entity(orderResponse.get(0)).build();
     }
     @Path("/1")
     @POST
