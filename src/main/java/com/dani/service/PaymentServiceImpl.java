@@ -4,8 +4,9 @@ package com.dani.service;
  *
  * @author danyr59
  */
-import com.dani.model.PaymentResult;
+
 import com.dani.model.Payment_;
+import com.dani.model.ResponseResult;
 
 import com.helpers.ClientSquare;
 import com.helpers.LocationInformation;
@@ -25,12 +26,14 @@ import java.util.concurrent.ExecutionException;
 public class PaymentServiceImpl {
 
     public PaymentsApi paymentsApi;
+    
 
     public PaymentServiceImpl() {
         paymentsApi = ClientSquare.client.getPaymentsApi();
     }
+    
 
-    public PaymentResult createPayment(Payment_ payment) throws InterruptedException, ExecutionException {
+    public ResponseResult createPayment(Payment_ payment) throws InterruptedException, ExecutionException {
         RetrieveLocationResponse locationResponse = new LocationInformation().getLocationInformation(ClientSquare.client).get();
         
         String  currency = locationResponse.getLocation().getCurrency();
@@ -56,14 +59,14 @@ public class PaymentServiceImpl {
 
         return paymentsApi.createPaymentAsync(body)
                 .thenApply(result -> {
-                    return new PaymentResult("SUCCESS", null); //pay.add(result.getPayment());
+                    return new ResponseResult("SUCCESS", null); //pay.add(result.getPayment());
                             //System.out.println("Success!");
                 })
                 .exceptionally(exception -> {
                     ApiException e= (ApiException) exception.getCause();
                     System.out.println("Failed to make the request");
                     System.out.println(String.format("Exception: %s", e.getMessage()));
-                    return new PaymentResult("FAILURE", e.getErrors());
+                    return new ResponseResult("FAILURE", e.getErrors());
                 }).join();
         //System.out.println(pay.get(0));
         //return pay.get(0);

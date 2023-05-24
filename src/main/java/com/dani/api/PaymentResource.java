@@ -3,10 +3,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import com.dani.model.Order_;
 import com.dani.model.Orders_;
-import com.dani.model.PaymentResult;
+
 import com.dani.service.OrderServiceImpl;
 import com.squareup.square.models.Payment;
 import com.dani.model.Payment_;
+import com.dani.model.ResponseResult;
 import com.squareup.square.models.*;
 import java.util.List;
 import org.json.JSONArray;
@@ -35,7 +36,7 @@ public class PaymentResource {
     @Consumes("application/json")
     public Response create_payment(Payment_ request) throws InterruptedException, ExecutionException{
         System.out.println("En payment");
-        PaymentResult result = service.createPayment(request);
+        ResponseResult result = service.createPayment(request);
         //service.createPayment(request);
         
                 

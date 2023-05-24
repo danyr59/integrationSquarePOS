@@ -38,7 +38,8 @@ public class OrdersResource {
                 order.getQuantityModifier(),
                 order.getQuantityOrder(), 
                 order.getItemVariationId(),
-                order.getLocation());
+                order.getLocation()
+               );
         
         List<Order> orderResponse = orderService.createOrderRequest();
         System.out.println(orderResponse.get(0));

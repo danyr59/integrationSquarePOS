@@ -10,13 +10,13 @@ import java.util.List;
  *
  * @author danyr59
  */
-public class PaymentResult {
+public class ResponseResult {
 
     private String title;
 
     private List<com.squareup.square.models.Error> errors;
 
-    public PaymentResult(String t, List<com.squareup.square.models.Error> errorMessages) {
+    public ResponseResult(String t, List<com.squareup.square.models.Error> errorMessages) {
         this.title = t;
         this.errors = errorMessages;
     }
