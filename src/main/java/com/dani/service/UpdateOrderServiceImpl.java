@@ -87,13 +87,13 @@ public class UpdateOrderServiceImpl {
 
         return ordersApi.updateOrderAsync(order_id, body)
                 .thenApply(result -> {
-                    return new ResponseResult("SUCCESS", null); //pay.add(result.getPayment());
+                    return new ResponseResult("SUCCESS", order_id, null); //pay.add(result.getPayment());
                 })
                 .exceptionally(exception -> {
                     ApiException e = (ApiException) exception.getCause();
                     System.out.println("Failed to make the request");
                     System.out.println(String.format("Exception: %s", e.getMessage()));
-                    return new ResponseResult("FAILURE", e.getErrors());
+                    return new ResponseResult("FAILURE", order_id, e.getErrors());
                 }).join();
     }
 

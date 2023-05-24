@@ -5,14 +5,39 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import com.dani.model.Order_;
 import com.dani.model.Orders_;
+import com.dani.model.Payment_;
+import com.dani.model.ResponseResult;
 import com.dani.service.OrderServiceImpl;
 import com.squareup.square.models.Order;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Path("v1/orders")
 public class OrdersResource {
+
+    OrderServiceImpl service;
+
+    public OrdersResource() {
+        service = new OrderServiceImpl();
+    }
+    
+    @POST
+    @Consumes("application/json")
+    public Response create_order(Order_ request) throws InterruptedException, ExecutionException{
+        System.out.println("en create order");
+        System.out.println(request);
+        ResponseResult result = service.createOrder(request);
+        //ResponseResult result = service.createPayment(request);
+        //service.createPayment(request);
+        
+                
+        return Response.ok().status(Response.Status.CREATED).entity(result).build();
+    }
+
+
+    /*
 
     OrderServiceImpl orderService;
 
@@ -66,4 +91,6 @@ public class OrdersResource {
 
         return Response.ok().status(Response.Status.CREATED).entity("hola").build();
     }
+
+     */
 }

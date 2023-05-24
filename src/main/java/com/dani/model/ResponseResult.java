@@ -13,11 +13,23 @@ import java.util.List;
 public class ResponseResult {
 
     private String title;
+     private String orderId;
+
+    public String getOrderId() {
+        return orderId;
+    }
+   
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+    
 
     private List<com.squareup.square.models.Error> errors;
 
-    public ResponseResult(String t, List<com.squareup.square.models.Error> errorMessages) {
+    public ResponseResult(String t, String orderId ,List<com.squareup.square.models.Error> errorMessages) {
         this.title = t;
+        this.orderId = orderId;
         this.errors = errorMessages;
     }
 

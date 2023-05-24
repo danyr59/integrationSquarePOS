@@ -26,11 +26,12 @@ public class UpdatePayment {
 
     @PUT
     @Consumes("application/json")
-    public Response update_payment(WraperUpdateOrder request, @QueryParam("order_id")String order_id) throws InterruptedException, ExecutionException {
+    public Response update_payment(WraperUpdateOrder request, @QueryParam("order_id")String order_id, @QueryParam("location_id")String location_id) throws InterruptedException, ExecutionException {
         System.out.println("En update");
         System.out.println(order_id);
         System.out.println(request);
         ResponseResult result = service.updateOrder(request, order_id);
+        System.out.println(location_id);
         //service.createPayment(request);
 
         return Response.ok().status(Response.Status.CREATED).entity(result).build();

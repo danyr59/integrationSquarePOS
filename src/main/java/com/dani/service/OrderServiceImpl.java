@@ -1,7 +1,12 @@
 package com.dani.service;
 
+import com.dani.model.Order_;
+import com.dani.model.Payment_;
+import com.dani.model.ResponseResult;
 import com.helpers.ClientSquare;
+import com.helpers.LocationInformation;
 import com.squareup.square.api.OrdersApi;
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.CreateOrderRequest;
 import com.squareup.square.models.Fulfillment;
 import com.squareup.square.models.FulfillmentRecipient;
@@ -9,11 +14,14 @@ import com.squareup.square.models.FulfillmentShipmentDetails;
 import com.squareup.square.models.Order;
 import com.squareup.square.models.OrderLineItem;
 import com.squareup.square.models.OrderLineItemModifier;
+import com.squareup.square.models.OrderLineItemTax;
+import com.squareup.square.models.RetrieveLocationResponse;
 import com.squareup.square.models.UpdateOrderRequest;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  *
@@ -28,6 +36,69 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderServiceImpl() {
         ordersApi = ClientSquare.client.getOrdersApi();
+    }
+
+    public ResponseResult createOrder(Order_ order_) throws InterruptedException, ExecutionException {
+
+        LinkedList<OrderLineItemModifier> modifiers = new LinkedList<>();
+        //LinkedList<OrderLineItem> lineItems = new LinkedList<>();
+
+        RetrieveLocationResponse locationResponse = new LocationInformation().getLocationInformation(ClientSquare.client).get();
+        order_.getOrder().getLine_items().stream().forEach(line_item -> {
+
+            //añadir modificadores
+            /*
+            line_item.getModifiers().stream().forEach(modifier -> {
+                OrderLineItemModifier orderLineItemModifier = new OrderLineItemModifier.Builder()
+                        .catalogObjectId(modifier.getCatalog_object_id())
+                        .quantity(modifier.getQuantity())
+                        .build();
+
+                modifiers.add(orderLineItemModifier);
+            });
+*/
+
+            OrderLineItem orderLineItem = new OrderLineItem.Builder(line_item.getQuantity())
+                    .catalogObjectId(line_item.getCatalog_object_id())
+                    .itemType(line_item.getItem_type())
+                   // .modifiers(modifiers)
+                    .build();
+            lineItems.add(orderLineItem);
+        });
+
+        LinkedList<OrderLineItemTax> taxes = new LinkedList<>();
+        order_.getOrder().getTaxes().stream().forEach(tax -> {
+            OrderLineItemTax orderLineItemTax = new OrderLineItemTax.Builder()
+                    .catalogObjectId(tax.getCatalog_object_id())
+                    .catalogVersion(Long.valueOf(tax.getCatalog_version()))
+                    .build();
+            taxes.add(orderLineItemTax);
+
+        });
+
+        Order order = new Order.Builder(order_.getOrder().getLocation_id())
+                .customerId(order_.getOrder().getCustomer_id())
+                .lineItems(lineItems)
+                .taxes(taxes)
+                .state(order_.getOrder().getState())
+                .ticketName(order_.getOrder().getTicket_name())
+                .build();
+
+        CreateOrderRequest body = new CreateOrderRequest.Builder()
+                .order(order)
+                .idempotencyKey(UUID.randomUUID().toString())
+                .build();
+
+        return ordersApi.createOrderAsync(body)
+                .thenApply(result -> {
+                    return new ResponseResult("SUCCESS", result.getOrder().getId(), null);
+                })
+                .exceptionally(exception -> {
+                    ApiException e = (ApiException) exception.getCause();
+                    System.out.println("Failed to make the request");
+                    System.out.println(String.format("Exception: %s", e.getMessage()));
+                    return new ResponseResult("FAILURE", null, e.getErrors());
+                }).join();
     }
 
     @Override
