@@ -7,7 +7,8 @@ package com.dani.service;
 import com.dani.model.ResponseResult;
 import com.dani.model.WraperUpdateOrder;
 import com.helpers.ClientSquare;
-import com.helpers.LocationInformation;
+import com.helpers.InformationSquare;
+
 //import com.squareup.square.api.;
 import com.squareup.square.api.OrdersApi;
 import com.squareup.square.exceptions.ApiException;
@@ -18,6 +19,7 @@ import com.squareup.square.models.Order;
 import com.squareup.square.models.RetrieveLocationResponse;
 import com.squareup.square.models.UpdateOrderRequest;
 import com.squareup.square.models.Address;
+import com.squareup.square.models.RetrieveOrderResponse;
 import java.util.LinkedList;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -34,28 +36,31 @@ public class UpdateOrderServiceImpl {
         ordersApi = ClientSquare.client.getOrdersApi();
     }
 
-    public ResponseResult updateOrder(WraperUpdateOrder orderUpdate, String order_id) throws InterruptedException, ExecutionException {
-        RetrieveLocationResponse locationResponse = new LocationInformation().getLocationInformation(ClientSquare.client).get();
+    public ResponseResult updateOrder(WraperUpdateOrder orderUpdate, String order_id, String location_id) throws InterruptedException, ExecutionException {
+        InformationSquare information = new InformationSquare(location_id, null);
+        RetrieveLocationResponse locationResponse = information.getLocationInformation(ClientSquare.client).get();
         String locationId = locationResponse.getLocation().getId();
-        LinkedList<Fulfillment> fulfillments = new LinkedList<>();
+
         
+
+        LinkedList<Fulfillment> fulfillments = new LinkedList<>();
 
         orderUpdate.getOrder().getFulfillments().stream().forEach(fulfillment -> {
             Address address = new Address.Builder()
-                .addressLine1(fulfillment.getShipment_details().getRecipient().getAddress().getAddress_line_1())
-                .addressLine2(fulfillment.getShipment_details().getRecipient().getAddress().getAddress_line_2())
-                .addressLine3(fulfillment.getShipment_details().getRecipient().getAddress().getAddress_line_3())
-                .locality(fulfillment.getShipment_details().getRecipient().getAddress().getLocality())
-                .sublocality(fulfillment.getShipment_details().getRecipient().getAddress().getSublocality())
-                .sublocality2(fulfillment.getShipment_details().getRecipient().getAddress().getSublocality_2())
-                .sublocality3(fulfillment.getShipment_details().getRecipient().getAddress().getSublocality_3())
-                .administrativeDistrictLevel1(fulfillment.getShipment_details().getRecipient().getAddress().getAdministrative_district_level_1())
-                .administrativeDistrictLevel2(fulfillment.getShipment_details().getRecipient().getAddress().getAdministrative_district_level_2())
-                .administrativeDistrictLevel3(fulfillment.getShipment_details().getRecipient().getAddress().getAdministrative_district_level_3())
-                .postalCode(fulfillment.getShipment_details().getRecipient().getAddress().getPostal_code())
-                .country(fulfillment.getShipment_details().getRecipient().getAddress().getCountry())
-                .build();
-            
+                    .addressLine1(fulfillment.getShipment_details().getRecipient().getAddress().getAddress_line_1())
+                    .addressLine2(fulfillment.getShipment_details().getRecipient().getAddress().getAddress_line_2())
+                    .addressLine3(fulfillment.getShipment_details().getRecipient().getAddress().getAddress_line_3())
+                    .locality(fulfillment.getShipment_details().getRecipient().getAddress().getLocality())
+                    .sublocality(fulfillment.getShipment_details().getRecipient().getAddress().getSublocality())
+                    .sublocality2(fulfillment.getShipment_details().getRecipient().getAddress().getSublocality_2())
+                    .sublocality3(fulfillment.getShipment_details().getRecipient().getAddress().getSublocality_3())
+                    .administrativeDistrictLevel1(fulfillment.getShipment_details().getRecipient().getAddress().getAdministrative_district_level_1())
+                    .administrativeDistrictLevel2(fulfillment.getShipment_details().getRecipient().getAddress().getAdministrative_district_level_2())
+                    .administrativeDistrictLevel3(fulfillment.getShipment_details().getRecipient().getAddress().getAdministrative_district_level_3())
+                    .postalCode(fulfillment.getShipment_details().getRecipient().getAddress().getPostal_code())
+                    .country(fulfillment.getShipment_details().getRecipient().getAddress().getCountry())
+                    .build();
+
             FulfillmentRecipient recipient = new FulfillmentRecipient.Builder()
                     .displayName(fulfillment.getShipment_details().getRecipient().getDisplay_name())
                     .emailAddress(fulfillment.getShipment_details().getRecipient().getEmail_address())

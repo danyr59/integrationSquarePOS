@@ -9,7 +9,8 @@ import com.dani.model.Payment_;
 import com.dani.model.ResponseResult;
 
 import com.helpers.ClientSquare;
-import com.helpers.LocationInformation;
+import com.helpers.InformationSquare;
+
 import com.squareup.square.api.PaymentsApi;
 import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.CreatePaymentRequest;
@@ -17,6 +18,7 @@ import com.squareup.square.models.ExternalPaymentDetails;
 import com.squareup.square.models.Money;
 import com.squareup.square.models.Payment;
 import com.squareup.square.models.RetrieveLocationResponse;
+import com.squareup.square.models.RetrieveOrderResponse;
 //import com.squareup.square.models.RetrieveOr
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,12 @@ public class PaymentServiceImpl {
     
 
     public ResponseResult createPayment(Payment_ payment) throws InterruptedException, ExecutionException {
-        RetrieveLocationResponse locationResponse = new LocationInformation().getLocationInformation(ClientSquare.client).get();
+        InformationSquare information = new InformationSquare(payment.getLocation_id(), payment.getOrder_id());
+        RetrieveLocationResponse locationResponse = information.getLocationInformation(ClientSquare.client).get();
+        
+        RetrieveOrderResponse orderResponse = information.getOrderInformation(ClientSquare.client).get();
+        String amount = String.valueOf(orderResponse.getOrder().getTotalMoney().getAmount());
+        System.out.println(orderResponse.getOrder());
         
         String  currency = locationResponse.getLocation().getCurrency();
         //System.out.println(locationResponse);

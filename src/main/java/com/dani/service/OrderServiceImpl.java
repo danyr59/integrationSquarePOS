@@ -4,7 +4,8 @@ import com.dani.model.Order_;
 import com.dani.model.Payment_;
 import com.dani.model.ResponseResult;
 import com.helpers.ClientSquare;
-import com.helpers.LocationInformation;
+import com.helpers.InformationSquare;
+
 import com.squareup.square.api.OrdersApi;
 import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.CreateOrderRequest;
@@ -43,7 +44,9 @@ public class OrderServiceImpl implements OrderService {
         LinkedList<OrderLineItemModifier> modifiers = new LinkedList<>();
         //LinkedList<OrderLineItem> lineItems = new LinkedList<>();
 
-        RetrieveLocationResponse locationResponse = new LocationInformation().getLocationInformation(ClientSquare.client).get();
+        RetrieveLocationResponse locationResponse = new InformationSquare(order_.getOrder().getLocation_id(), null).getLocationInformation(ClientSquare.client).get();
+        String locationId = locationResponse.getLocation().getId();
+        //System.out.println(locationId);
         order_.getOrder().getLine_items().stream().forEach(line_item -> {
 
             //añadir modificadores
@@ -76,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
 
         });
 
-        Order order = new Order.Builder(order_.getOrder().getLocation_id())
+        Order order = new Order.Builder(locationId)
                 .customerId(order_.getOrder().getCustomer_id())
                 .lineItems(lineItems)
                 .taxes(taxes)

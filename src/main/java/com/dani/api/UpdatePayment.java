@@ -30,7 +30,7 @@ public class UpdatePayment {
         System.out.println("En update");
         System.out.println(order_id);
         System.out.println(request);
-        ResponseResult result = service.updateOrder(request, order_id);
+        ResponseResult result = service.updateOrder(request, order_id, location_id);
         System.out.println(location_id);
         //service.createPayment(request);
 
