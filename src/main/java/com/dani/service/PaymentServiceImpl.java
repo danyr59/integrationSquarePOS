@@ -46,7 +46,7 @@ public class PaymentServiceImpl {
         String  currency = locationResponse.getLocation().getCurrency();
         //System.out.println(locationResponse);
         Money amountMoney = new Money.Builder()
-                .amount(payment.getAmount_money().getAmount())
+                .amount(Long.valueOf(amount))
                 .currency(currency)
                 .build();
 

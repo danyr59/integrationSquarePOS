@@ -34,7 +34,7 @@ public class Payment_ {
     private String source_id;
     private String reference_id;
     private String order_id;
-    private Money amount_money;
+    //private Money amount_money;
     private ExternalPaymentDetails external_details;
     private String location_id;
 

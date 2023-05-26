@@ -37,11 +37,12 @@ public class UpdateOrderServiceImpl {
     }
 
     public ResponseResult updateOrder(WraperUpdateOrder orderUpdate, String order_id, String location_id) throws InterruptedException, ExecutionException {
-        InformationSquare information = new InformationSquare(location_id, null);
+        InformationSquare information = new InformationSquare(location_id, order_id);
         RetrieveLocationResponse locationResponse = information.getLocationInformation(ClientSquare.client).get();
         String locationId = locationResponse.getLocation().getId();
 
-        
+        RetrieveOrderResponse orderResponse = information.getOrderInformation(ClientSquare.client).get();
+        Integer version = orderResponse.getOrder().getVersion();
 
         LinkedList<Fulfillment> fulfillments = new LinkedList<>();
 
@@ -82,7 +83,7 @@ public class UpdateOrderServiceImpl {
 
         Order order = new Order.Builder(locationId)
                 .fulfillments(fulfillments)
-                .version(Integer.parseInt(orderUpdate.getOrder().getVersion()))
+                .version(version)
                 .build();
 
         UpdateOrderRequest body = new UpdateOrderRequest.Builder()
