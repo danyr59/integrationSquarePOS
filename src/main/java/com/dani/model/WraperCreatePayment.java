@@ -4,22 +4,6 @@
  */
 package com.dani.model;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.squareup.square.models.ApplicationDetails;
-import com.squareup.square.models.BankAccountPaymentDetails;
-import com.squareup.square.models.BuyNowPayLaterDetails;
-import com.squareup.square.models.CardPaymentDetails;
-import com.squareup.square.models.CashPaymentDetails;
-import com.squareup.square.models.DeviceDetails;
-import com.squareup.square.models.DigitalWalletDetails;
-import com.squareup.square.models.ExternalPaymentDetails;
-import com.squareup.square.models.Money;
-import com.squareup.square.models.ProcessingFee;
-import com.squareup.square.models.RiskEvaluation;
-import io.apimatic.core.types.OptionalNullable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Payment_ {
+public class WraperCreatePayment {
 
     private String idempotency_key;
     private String source_id;

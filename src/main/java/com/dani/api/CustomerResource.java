@@ -4,10 +4,7 @@ import com.dani.model.*;
 import com.dani.service.*;
 import com.squareup.square.models.CreateCustomerRequest;
 import com.squareup.square.models.Customer;
-import com.squareup.square.models.ListCustomersResponse;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
@@ -33,7 +30,7 @@ public class CustomerResource {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response crear_customer(Customer_ c_) {
+    public Response crear_customer(WraperCreateCustomer c_) {
        
         customer_service_impl = new CustomerServiceImpl();
         //customer_service_impl.create_connection();
@@ -56,59 +53,5 @@ public class CustomerResource {
          
         return Response.ok().status(Response.Status.OK).entity(c).build();
     }
-    /*
-            CreateCustomerRequest c =  customer_service_impl.create_customer_builder(c_.getGiven_name(),
-                c_.getFamily_name(),
-                c_.getEmailAddress(),
-                c_.getAddress_line_1(),
-                c_.getAddress_line_2(),
-                c_.getLocality(),
-                c_.getAdministrative_district_level_1(), 
-                c_.getPostal_code(), 
-                c_.getCountry(),
-                c_.getPhone_number(), 
-                c_.getReference_id(), 
-                c_.getNote());
-    @Path("/{id}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getProduct(@PathParam("id") Integer id) {
-        Product p = service.findById(id);
-        return Response.ok().entity(p).build();
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createProduct(Product product) {
-        Product p = service.save(product);
-        return Response.ok().status(Response.Status.CREATED).entity(p).build();
-    }
-
-    @Path("/{id}")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateProduct(@PathParam("id") Integer id, Product product) {
-        if (service.findById(id) != null) {
-            product.setId(id);
-            Product p = service.update(product);
-            return Response.ok().status(Response.Status.OK).entity(p).build();
-        } else {
-            return Response.ok().status(Response.Status.NOT_FOUND).build();
-        }
-    }
-
-    @Path("/{id}")
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProduct(@PathParam("id") Integer id) {
-        if (service.findById(id) != null) {
-            service.delete(id);
-            return Response.ok().status(Response.Status.NO_CONTENT).build();
-        } else {
-            return Response.ok().status(Response.Status.NOT_FOUND).build();
-        }
-    }
-     */
+    
 }

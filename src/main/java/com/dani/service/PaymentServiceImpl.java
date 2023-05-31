@@ -5,8 +5,9 @@ package com.dani.service;
  * @author danyr59
  */
 
-import com.dani.model.Payment_;
+
 import com.dani.model.ResponseResult;
+import com.dani.model.WraperCreatePayment;
 
 import com.helpers.ClientSquare;
 import com.helpers.InformationSquare;
@@ -16,16 +17,13 @@ import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.CreatePaymentRequest;
 import com.squareup.square.models.ExternalPaymentDetails;
 import com.squareup.square.models.Money;
-import com.squareup.square.models.Payment;
 import com.squareup.square.models.RetrieveLocationResponse;
 import com.squareup.square.models.RetrieveOrderResponse;
 //import com.squareup.square.models.RetrieveOr
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-public class PaymentServiceImpl {
+public class PaymentServiceImpl implements PaymentService{
 
     public PaymentsApi paymentsApi;
     
@@ -34,8 +32,8 @@ public class PaymentServiceImpl {
         paymentsApi = ClientSquare.client.getPaymentsApi();
     }
     
-
-    public ResponseResult createPayment(Payment_ payment) throws InterruptedException, ExecutionException {
+    @Override
+    public ResponseResult createPayment(WraperCreatePayment payment) throws InterruptedException, ExecutionException {
         InformationSquare information = new InformationSquare(payment.getLocation_id(), payment.getOrder_id());
         RetrieveLocationResponse locationResponse = information.getLocationInformation(ClientSquare.client).get();
         

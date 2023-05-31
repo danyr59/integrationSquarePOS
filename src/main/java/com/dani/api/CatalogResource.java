@@ -1,7 +1,7 @@
 
 package com.dani.api;
 
-import com.dani.service.ItemsServiceImpl;
+import com.dani.service.CatalogServiceImpl;
 import com.squareup.square.models.CatalogObject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -10,11 +10,11 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("v1/items")
-public class itemsResource {
-    ItemsServiceImpl a;
+public class CatalogResource {
+    CatalogServiceImpl a;
     
-    public itemsResource(){
-        a = new ItemsServiceImpl();
+    public CatalogResource(){
+        a = new CatalogServiceImpl();
     }
     
     @GET
@@ -24,6 +24,8 @@ public class itemsResource {
         return Response.ok().status(Response.Status.OK).entity(catalogo).build();
     }
  
+    
+    //no usar ya que genera el mismo inventario
     @Path("/1")
     @GET
     @Produces

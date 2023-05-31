@@ -1,33 +1,21 @@
 package com.dani.service;
 
-import com.dani.model.Customer_;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dani.model.WraperCreateCustomer;
 import com.helpers.ClientSquare;
-import com.squareup.square.api.CustomersApi;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.Customer;
 
 import com.squareup.square.models.Address;
 import com.squareup.square.models.CreateCustomerRequest;
-import com.squareup.square.models.ListCustomersResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CustomerServiceImpl implements CustomerService {
 
-    Customer_ customer;
+    WraperCreateCustomer customer;
+    
 
     public CustomerServiceImpl() {
-        this.customer = new Customer_();
-    }
-
-    public void create_connection() {
-      //  ClientSquare.connection();
+        this.customer = new WraperCreateCustomer();
     }
 
     @Override
@@ -79,24 +67,22 @@ public class CustomerServiceImpl implements CustomerService {
         this.customer.customers_api = ClientSquare.client.getCustomersApi();
         // System.out.println(this.customer.customers_api);
 
-        
         List<Customer> customers = new ArrayList<>();
         this.customer.customers_api.listCustomersAsync(null, null, null, null).thenAccept(result -> {
             // TODO success callback handler
-            
+
             List<Customer> aux = result.getCustomers();
             for (Customer customer1 : aux) {
                 customers.add(customer1);
             }
-            
-              
+
         }).exceptionally(exception -> {
             // TODO failure callback handler
             exception.printStackTrace();
             return null;
         }).join();
         return customers;
-        
+
         /*
         ListCustomersResponse h = null;
         h = this.customer.customers_api.listCustomersAsync(null, null, null, null).join();
@@ -117,7 +103,6 @@ public class CustomerServiceImpl implements CustomerService {
         
         return customers;
          */
-
     }
 
 }

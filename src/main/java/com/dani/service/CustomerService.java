@@ -3,9 +3,7 @@ package com.dani.service;
 
 import com.squareup.square.models.CreateCustomerRequest;
 import com.squareup.square.models.Customer;
-import com.squareup.square.models.ListCustomersResponse;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 
 public interface CustomerService {

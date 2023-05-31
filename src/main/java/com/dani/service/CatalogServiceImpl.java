@@ -9,19 +9,17 @@ import com.squareup.square.models.CatalogItemVariation;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogObjectBatch;
 import com.squareup.square.models.CatalogTax;
-import com.squareup.square.models.Customer;
-import com.squareup.square.models.ListCatalogResponse;
 import com.squareup.square.models.Money;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemsServiceImpl implements ItemsService {
+public class CatalogServiceImpl implements CatalogService {
 
     public CatalogApi catalog;
     
-    public ItemsServiceImpl(){
-        this.catalog/*.customers_api*/ = ClientSquare.client.getCatalogApi();
+    public CatalogServiceImpl(){
+        this.catalog = ClientSquare.client.getCatalogApi();
     }
 
     @Override
