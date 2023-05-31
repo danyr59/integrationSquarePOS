@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
  *
  * @author danyr59
  */
-@Path("v1/update-order")
+@Path("v1/orders")
 public class UpdatePayment {
     UpdateOrderServiceImpl service = new UpdateOrderServiceImpl();
 
