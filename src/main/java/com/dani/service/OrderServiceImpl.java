@@ -1,6 +1,5 @@
 package com.dani.service;
 
-
 import com.dani.model.ResponseResult;
 import com.dani.model.WraperCreateOrder;
 import com.dani.model.WraperUpdateOrder;
@@ -33,14 +32,13 @@ public class OrderServiceImpl implements OrderService {
 
     LinkedList<OrderLineItemModifier> modifiers = new LinkedList<>();
     LinkedList<OrderLineItem> lineItems = new LinkedList<>();
-    
+
     public OrdersApi ordersApi;
 
-       
     public OrderServiceImpl() {
         ordersApi = ClientSquare.client.getOrdersApi();
     }
-    
+
     @Override
     public ResponseResult createOrder(WraperCreateOrder order_) throws InterruptedException, ExecutionException {
 
@@ -54,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
 
             //añadir modificadores
             /*
+           if(line_item.getModifiers() != null && !line_item.getModifiers().isEmpty()){
             line_item.getModifiers().stream().forEach(modifier -> {
                 OrderLineItemModifier orderLineItemModifier = new OrderLineItemModifier.Builder()
                         .catalogObjectId(modifier.getCatalog_object_id())
@@ -62,12 +61,14 @@ public class OrderServiceImpl implements OrderService {
 
                 modifiers.add(orderLineItemModifier);
             });
-*/
-
+            
+            }
+            
+             */
             OrderLineItem orderLineItem = new OrderLineItem.Builder(line_item.getQuantity())
                     .catalogObjectId(line_item.getCatalog_object_id())
                     .itemType(line_item.getItem_type())
-                   // .modifiers(modifiers)
+                    // .modifiers(modifiers)
                     .build();
             lineItems.add(orderLineItem);
         });
@@ -106,6 +107,7 @@ public class OrderServiceImpl implements OrderService {
                     return new ResponseResult("FAILURE", null, e.getErrors());
                 }).join();
     }
+
     @Override
     public ResponseResult updateOrder(WraperUpdateOrder orderUpdate, String order_id, String location_id) throws InterruptedException, ExecutionException {
         InformationSquare information = new InformationSquare(location_id, order_id);
@@ -173,7 +175,5 @@ public class OrderServiceImpl implements OrderService {
                     return new ResponseResult("FAILURE", order_id, e.getErrors());
                 }).join();
     }
-
-
 
 }

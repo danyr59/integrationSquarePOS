@@ -13,31 +13,62 @@ import com.squareup.square.models.Money;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import com.helpers.Utils.TypeCatalog;
+import static com.helpers.Utils.TypeCatalog.ITEM;
+//import io.apimatic.core.types.OptionalNullable;
 
 public class CatalogServiceImpl implements CatalogService {
 
     public CatalogApi catalog;
-    
-    public CatalogServiceImpl(){
+
+    public CatalogServiceImpl() {
         this.catalog = ClientSquare.client.getCatalogApi();
     }
 
     @Override
-    public List<CatalogObject> getCatalog() {
-        
+    public List<CatalogObject> getCatalog(TypeCatalog type) {
+        String typeString;
+        switch (type) {
+        case ITEM:
+            typeString = "ITEM";
+            break;
+        case ITEM_VARIATION:
+            typeString = "ITEM_VARIATION";
+            break;
+        case CATEGORY:
+            typeString = "CATEGORY";
+            break;
+        case DISCOUNT:
+            typeString = "DISCOUNT";
+            break;
+        case TAX:
+            typeString = "TAX";
+            break;
+        case MODIFIER:
+            typeString = "MODIFIER";
+            break;
+        case MODIFIER_LIST:
+            typeString = "MODIFIER_LIST";
+            break;
+        case IMAGE:
+            typeString = "IMAGE";
+            break;
+        default:
+            typeString = null;
+            System.out.println("No existe esta opción, traera todo el catalogo");
+    }
+
         // System.out.println(this.customer.customers_api);
-
         List<CatalogObject> catalogo = new ArrayList<>();
-        this.catalog./*.customers_api.*/listCatalogAsync(null, null, null).thenAccept(result -> {
+        this.catalog.listCatalogAsync(null, typeString, null).thenAccept(result -> {
             // TODO success callback handler
+            
 
-           
             List<CatalogObject> aux = result.getObjects();
             for (CatalogObject item : aux) {
                 catalogo.add(item);
             }
-            
-             
+
         }).exceptionally(exception -> {
             // TODO failure callback handler
             exception.printStackTrace();
@@ -46,7 +77,7 @@ public class CatalogServiceImpl implements CatalogService {
         return catalogo;
     }
 
-    public void  create_catalog() {
+    public void create_catalog() {
         LinkedList<String> taxIds = new LinkedList<>();
         taxIds.add("#SalesTax");
 
