@@ -9,7 +9,8 @@ package com.dani.service;
 import com.dani.model.ResponseResult;
 import com.dani.model.WraperCreatePayment;
 
-import com.helpers.ClientSquare;
+
+import com.helpers.ClientSquareImpl;
 import com.helpers.InformationSquare;
 
 import com.squareup.square.api.PaymentsApi;
@@ -25,19 +26,24 @@ import java.util.concurrent.ExecutionException;
 
 public class PaymentServiceImpl implements PaymentService{
 
-    public PaymentsApi paymentsApi;
+    String token;
+    //public PaymentsApi paymentsApi;
     
 
-    public PaymentServiceImpl() {
-        paymentsApi = ClientSquare.client.getPaymentsApi();
+    
+    public PaymentServiceImpl(String token){
+        this.token = token;
     }
     
     @Override
     public ResponseResult createPayment(WraperCreatePayment payment) throws InterruptedException, ExecutionException {
-        InformationSquare information = new InformationSquare(payment.getLocation_id(), payment.getOrder_id());
-        RetrieveLocationResponse locationResponse = information.getLocationInformation(ClientSquare.client).get();
+        ClientSquareImpl client = new ClientSquareImpl(this.token);
+        PaymentsApi paymentsApi = client.getClient().getPaymentsApi();
         
-        RetrieveOrderResponse orderResponse = information.getOrderInformation(ClientSquare.client).get();
+        InformationSquare information = new InformationSquare(payment.getLocation_id(), payment.getOrder_id());
+        RetrieveLocationResponse locationResponse = information.getLocationInformation(client.getClient()).get();
+        
+        RetrieveOrderResponse orderResponse = information.getOrderInformation(client.getClient()).get();
         String amount = String.valueOf(orderResponse.getOrder().getTotalMoney().getAmount());
         System.out.println(orderResponse.getOrder());
         

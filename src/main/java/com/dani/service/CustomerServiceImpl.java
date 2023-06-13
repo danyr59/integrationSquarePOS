@@ -1,7 +1,8 @@
 package com.dani.service;
 
 import com.dani.model.WraperCreateCustomer;
-import com.helpers.ClientSquare;
+
+import com.helpers.ClientSquareImpl;
 import com.squareup.square.models.Customer;
 
 import com.squareup.square.models.Address;
@@ -40,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .referenceId(rid)
                 .note(n)
                 .build();
-        this.customer.customers_api = ClientSquare.client.getCustomersApi();
+        this.customer.customers_api = ClientSquareImpl.client.getCustomersApi();
         //System.out.println(ClientSquare.client.getCustomersApi());
         return this.customer.body;
 
@@ -64,7 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> list_of_customers() {
-        this.customer.customers_api = ClientSquare.client.getCustomersApi();
+        this.customer.customers_api = ClientSquareImpl.client.getCustomersApi();
         // System.out.println(this.customer.customers_api);
 
         List<Customer> customers = new ArrayList<>();

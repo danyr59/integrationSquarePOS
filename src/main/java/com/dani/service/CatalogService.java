@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface CatalogService {
     public List<CatalogObject> getCatalog(Utils.TypeCatalog type);
-    public void create_catalog();
+    //public void create_catalog();
 }

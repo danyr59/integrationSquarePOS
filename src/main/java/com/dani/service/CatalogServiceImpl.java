@@ -1,17 +1,10 @@
 package com.dani.service;
 
-import com.helpers.ClientSquare;
+import com.squareup.square.SquareClient;
+import com.helpers.ClientSquareImpl;
 import com.squareup.square.api.CatalogApi;
-import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
-import com.squareup.square.models.CatalogCategory;
-import com.squareup.square.models.CatalogItem;
-import com.squareup.square.models.CatalogItemVariation;
 import com.squareup.square.models.CatalogObject;
-import com.squareup.square.models.CatalogObjectBatch;
-import com.squareup.square.models.CatalogTax;
-import com.squareup.square.models.Money;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import com.helpers.Utils.TypeCatalog;
 import static com.helpers.Utils.TypeCatalog.ITEM;
@@ -19,16 +12,19 @@ import static com.helpers.Utils.TypeCatalog.ITEM;
 
 public class CatalogServiceImpl implements CatalogService {
 
-    public CatalogApi catalog;
-
-    public CatalogServiceImpl() {
-        this.catalog = ClientSquare.client.getCatalogApi();
+    String token;
+    //public CatalogApi catalog;
+    public CatalogServiceImpl(String token) {
+        this.token = token ;
+        //this.catalog = client.getClient().getCatalogApi();
+//this.catalog =ClientSquare.client.getCatalogApi();
     }
 
     @Override
-    public List<CatalogObject> getCatalog(TypeCatalog type) {
-        String typeString;
-        switch (type) {
+    public List<CatalogObject>  getCatalog(TypeCatalog type) {
+    CatalogApi catalog = new ClientSquareImpl(this.token).getClient().getCatalogApi();
+    String typeString;
+    switch (type) {
         case ITEM:
             typeString = "ITEM";
             break;
@@ -56,28 +52,37 @@ public class CatalogServiceImpl implements CatalogService {
         default:
             typeString = null;
             System.out.println("No existe esta opción, traera todo el catalogo");
-    }
+    } // System.out.println(this.customer.customers_api);
+            List
 
-        // System.out.println(this.customer.customers_api);
-        List<CatalogObject> catalogo = new ArrayList<>();
-        this.catalog.listCatalogAsync(null, typeString, null).thenAccept(result -> {
+    <CatalogObject> catalogo = new ArrayList<> ();
+     
+
+    catalog.listCatalogAsync ( 
+        null, typeString, null).thenAccept(result -> {
             // TODO success callback handler
             
 
             List<CatalogObject> aux = result.getObjects();
-            for (CatalogObject item : aux) {
-                catalogo.add(item);
-            }
+        for (CatalogObject item : aux) {
+            catalogo.add(item);
+        }
 
-        }).exceptionally(exception -> {
-            // TODO failure callback handler
-            exception.printStackTrace();
-            return null;
-        }).join();
-        return catalogo;
     }
 
-    public void create_catalog() {
+    ).exceptionally(exception  
+        -> {
+            // TODO failure callback handler
+            exception.printStackTrace();
+        return null;
+    }
+
+    ).join();
+    
+    return catalogo ;
+}
+/*
+public void create_catalog() {
         LinkedList<String> taxIds = new LinkedList<>();
         taxIds.add("#SalesTax");
 
@@ -217,4 +222,5 @@ public class CatalogServiceImpl implements CatalogService {
                 });
 
     }
+*/
 }

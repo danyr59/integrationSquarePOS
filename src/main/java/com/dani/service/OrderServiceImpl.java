@@ -3,7 +3,8 @@ package com.dani.service;
 import com.dani.model.ResponseResult;
 import com.dani.model.WraperCreateOrder;
 import com.dani.model.WraperUpdateOrder;
-import com.helpers.ClientSquare;
+
+import com.helpers.ClientSquareImpl;
 import com.helpers.InformationSquare;
 
 import com.squareup.square.api.OrdersApi;
@@ -30,22 +31,25 @@ import java.util.concurrent.ExecutionException;
  */
 public class OrderServiceImpl implements OrderService {
 
+    String token;
     LinkedList<OrderLineItemModifier> modifiers = new LinkedList<>();
     LinkedList<OrderLineItem> lineItems = new LinkedList<>();
 
     public OrdersApi ordersApi;
 
-    public OrderServiceImpl() {
-        ordersApi = ClientSquare.client.getOrdersApi();
+    public OrderServiceImpl(String token) {
+        this.token = token;
     }
 
     @Override
     public ResponseResult createOrder(WraperCreateOrder order_) throws InterruptedException, ExecutionException {
+        ClientSquareImpl client = new ClientSquareImpl(this.token);
+        OrdersApi orders_api = client.getClient().getOrdersApi();
 
         LinkedList<OrderLineItemModifier> modifiers = new LinkedList<>();
         //LinkedList<OrderLineItem> lineItems = new LinkedList<>();
 
-        RetrieveLocationResponse locationResponse = new InformationSquare(order_.getOrder().getLocation_id(), null).getLocationInformation(ClientSquare.client).get();
+        RetrieveLocationResponse locationResponse = new InformationSquare(order_.getOrder().getLocation_id(), null).getLocationInformation(client.getClient()).get();
         String locationId = locationResponse.getLocation().getId();
         //System.out.println(locationId);
         order_.getOrder().getLine_items().stream().forEach(line_item -> {
@@ -96,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
                 .idempotencyKey(UUID.randomUUID().toString())
                 .build();
 
-        return ordersApi.createOrderAsync(body)
+        return orders_api.createOrderAsync(body)
                 .thenApply(result -> {
                     return new ResponseResult("SUCCESS", result.getOrder().getId(), null);
                 })
@@ -110,11 +114,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseResult updateOrder(WraperUpdateOrder orderUpdate, String order_id, String location_id) throws InterruptedException, ExecutionException {
+        ClientSquareImpl client = new ClientSquareImpl(this.token);
+
+        OrdersApi orders_api = client.getClient().getOrdersApi();
+
         InformationSquare information = new InformationSquare(location_id, order_id);
-        RetrieveLocationResponse locationResponse = information.getLocationInformation(ClientSquare.client).get();
+         System.out.println(information);
+        RetrieveLocationResponse locationResponse = information.getLocationInformation(client.getClient()).get();
+       
         String locationId = locationResponse.getLocation().getId();
 
-        RetrieveOrderResponse orderResponse = information.getOrderInformation(ClientSquare.client).get();
+        RetrieveOrderResponse orderResponse = information.getOrderInformation(client.getClient()).get();
         Integer version = orderResponse.getOrder().getVersion();
 
         LinkedList<Fulfillment> fulfillments = new LinkedList<>();
@@ -164,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
                 .idempotencyKey(UUID.randomUUID().toString())
                 .build();
 
-        return ordersApi.updateOrderAsync(order_id, body)
+        return orders_api.updateOrderAsync(order_id, body)
                 .thenApply(result -> {
                     return new ResponseResult("SUCCESS", order_id, null); //pay.add(result.getPayment());
                 })

@@ -10,26 +10,35 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helpers.Utils.TypeCatalog;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
 
 @Path("v1/items")
 public class CatalogResource {
 
-    CatalogServiceImpl a;
-
+    //CatalogServiceImpl a = null;
     public CatalogResource() {
-        a = new CatalogServiceImpl();
+        //a = new CatalogServiceImpl();
     }
 
     @GET
     @Produces("application/json")
-    public Response inventory() throws JsonProcessingException {
+    public Response inventory(@Context HttpServletRequest httpRequest) throws JsonProcessingException {
+        String token = httpRequest.getHeader("Authorization");
+        if (token.equals("") || token == null) {
+
+            return Response.ok().status(Response.Status.CONFLICT).entity("error falta token square").build();
+        }
+        CatalogServiceImpl a = new CatalogServiceImpl(token);
+
+        System.out.println(token);
+
         List<CatalogObject> catalogo = a.getCatalog(TypeCatalog.ALL);
         String jsonString = "";
         try {
 
             ObjectMapper objectMapper = new ObjectMapper();
             jsonString = objectMapper.writeValueAsString(catalogo);
-            
 
         } catch (JsonProcessingException e) {
             System.out.println("Error al serializar el objeto: " + e.getMessage());
@@ -42,8 +51,14 @@ public class CatalogResource {
     @Path("/1")
     @GET
     @Produces
-    public Response createInventory() {
-        a.create_catalog();
+    public Response createInventory(@Context HttpServletRequest httpRequest) {
+        String token = httpRequest.getHeader("Authorization");
+        if (token.equals("") || token == null) {
+
+            return Response.ok().status(Response.Status.CONFLICT).entity("error falta token square").build();
+        }
+        CatalogServiceImpl a = new CatalogServiceImpl(token);
+        //a.create_catalog();
         return Response.ok().status(Response.Status.CREATED).entity("listo").build();
     }
 
