@@ -72,6 +72,7 @@ public class CatalogServiceImpl implements CatalogService {
 
     ).exceptionally(exception  
         -> {
+        System.out.println(exception);
             // TODO failure callback handler
             exception.printStackTrace();
         return null;

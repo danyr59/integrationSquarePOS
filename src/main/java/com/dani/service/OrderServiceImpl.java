@@ -81,7 +81,6 @@ public class OrderServiceImpl implements OrderService {
         order_.getOrder().getTaxes().stream().forEach(tax -> {
             OrderLineItemTax orderLineItemTax = new OrderLineItemTax.Builder()
                     .catalogObjectId(tax.getCatalog_object_id())
-                    .catalogVersion(Long.valueOf(tax.getCatalog_version()))
                     .build();
             taxes.add(orderLineItemTax);
 
@@ -119,9 +118,9 @@ public class OrderServiceImpl implements OrderService {
         OrdersApi orders_api = client.getClient().getOrdersApi();
 
         InformationSquare information = new InformationSquare(location_id, order_id);
-         System.out.println(information);
+        System.out.println(information);
         RetrieveLocationResponse locationResponse = information.getLocationInformation(client.getClient()).get();
-       
+
         String locationId = locationResponse.getLocation().getId();
 
         RetrieveOrderResponse orderResponse = information.getOrderInformation(client.getClient()).get();
@@ -158,6 +157,7 @@ public class OrderServiceImpl implements OrderService {
 
             Fulfillment fulfillment_ = new Fulfillment.Builder()
                     .type(fulfillment.getType())
+                    .state("PROPOSED")
                     .shipmentDetails(shipmentDetails)
                     .build();
 
